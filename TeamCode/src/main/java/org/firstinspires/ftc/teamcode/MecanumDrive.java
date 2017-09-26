@@ -40,7 +40,6 @@ public class MecanumDrive extends LinearOpMode{
         //Initialize ProjectMecanum with hardwareMap configuration
         robot.init(hardwareMap);
         waitForStart();
-
         while(opModeIsActive()) {
             //Get the 2 dimensional vector of the direction of left stick and rotation based on right stick
             vectorF    = new VectorF(-gamepad1.left_stick_x, gamepad1.left_stick_y);
