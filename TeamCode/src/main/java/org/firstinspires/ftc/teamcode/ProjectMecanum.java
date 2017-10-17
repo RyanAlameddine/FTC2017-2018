@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -27,6 +28,8 @@ public class ProjectMecanum
     public DcMotor  backRight  = null;
     public DcMotor  backLeft   = null;
 
+    public ColorSensor colorSensor = null;
+
     /* local OpMode members. */
     HardwareMap         hwMap   = null;
     private ElapsedTime period  = new ElapsedTime();
@@ -35,6 +38,9 @@ public class ProjectMecanum
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
+        // Load sensors
+        colorSensor = hwMap.colorSensor.get("colorSensor");
 
         // Define and Initialize Motors
         frontRight = hwMap.dcMotor.get("frontRight");
@@ -67,7 +73,7 @@ public class ProjectMecanum
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
-     *
+     *uh huuuuuuuuuuuuuh -not aaron
      * @param periodMs  Length of wait cycle in mSec.
      * @throws InterruptedException
      */

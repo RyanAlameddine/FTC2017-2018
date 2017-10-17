@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
  *
  * Created September 21, 2017 by Ryan Alameddine
  *
- * Last Edited
+ * Last Edited October 17, 2017 by Ryan Alameddine
  *
  * @author Ryan Alameddine
  *
@@ -22,17 +22,29 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 public class MecanumDrive extends LinearOpMode{
     ProjectMecanum robot = new ProjectMecanum();
 
-    float speed           = 0;
-    float angle           = 0;
+    /* Setting variables */
+
+    //Speed multiplier. The higher it is, the more likely to clip at high speeds because motor max is 1
     float speedMultiplier = 1;
-    float direction       = 0;
-    VectorF vectorF;
 
-    float frontLeft;
-    float frontRight;
-    float backLeft;
-    float backRight;
+    //Speed multiplier when slow mode is active
+    float slowModeMultiplier = .3f;
 
+    /* Calculation variables DO NOT CHANGE */
+
+    //Robot controls:
+    float speed       = 0;
+    float angle       = 0;
+    float direction   = 0;
+    VectorF vectorF   = null;
+
+    //Individual motor powers:
+    float frontLeft   = 0;
+    float frontRight  = 0;
+    float backLeft    = 0;
+    float backRight   = 0;
+
+    //Highest motor power: (used for clipping high speeds above 1)
     float greatestNum = 0;
 
     @Override
@@ -40,6 +52,7 @@ public class MecanumDrive extends LinearOpMode{
         //Initialize ProjectMecanum with hardwareMap configuration
         robot.init(hardwareMap);
         waitForStart();
+
         while(opModeIsActive()) {
             //Get the 2 dimensional vector of the direction of left stick and rotation based on right stick
             vectorF    = new VectorF(-gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -59,28 +72,29 @@ public class MecanumDrive extends LinearOpMode{
             if (Math.abs(frontRight) > greatestNum) {
                 greatestNum = Math.abs(frontRight);
             }
-            if (Math.abs(backLeft) > greatestNum) {
+            if (Math.abs(backLeft)   > greatestNum) {
                 greatestNum = Math.abs(backLeft);
             }
-            if (Math.abs(backRight) > greatestNum) {
+            if (Math.abs(backRight)  > greatestNum) {
                 greatestNum = Math.abs(backRight);
             }
+
             if (greatestNum > 1) {
-                frontLeft /= greatestNum;
+                frontLeft  /= greatestNum;
                 frontRight /= greatestNum;
-                backLeft /= greatestNum;
-                backRight /= greatestNum;
+                backLeft   /= greatestNum;
+                backRight  /= greatestNum;
             }
 
-            robot.frontLeft.setPower(Float.isNaN(frontLeft) ? 0 : frontLeft);
-            robot.frontRight.setPower(Float.isNaN(frontRight) ? 0 : frontRight);
-            robot.backLeft.setPower(Float.isNaN(backLeft) ? 0 : backLeft);
-            robot.backRight.setPower(Float.isNaN(backRight) ? 0 : backRight);
+            robot.frontLeft .setPower(Float.isNaN(frontLeft)  ? 0 : frontLeft  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.frontRight.setPower(Float.isNaN(frontRight) ? 0 : frontRight * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.backLeft  .setPower(Float.isNaN(backLeft)   ? 0 : backLeft   * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.backRight .setPower(Float.isNaN(backRight)  ? 0 : backRight  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
         }
         //Reset robot motors to stop when game is finished
-        robot.frontLeft.setPower(0);
+        robot.frontLeft .setPower(0);
         robot.frontRight.setPower(0);
-        robot.backLeft.setPower(0);
-        robot.backRight.setPower(0);
+        robot.backLeft  .setPower(0);
+        robot.backRight .setPower(0);
     }
 }
