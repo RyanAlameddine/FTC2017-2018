@@ -26,8 +26,8 @@ public class ColorTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            robot.colorSensor.enableLed(true);
-            telemetry.addData("ARGB", robot.colorSensor.argb());
+            //robot.colorSensor.enableLed(true);
+            //telemetry.addData("ARGB", robot.colorSensor.argb());
         }
     }
 }

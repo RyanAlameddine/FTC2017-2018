@@ -28,7 +28,7 @@ public class ProjectMecanum
     public DcMotor  backRight  = null;
     public DcMotor  backLeft   = null;
 
-    public ColorSensor colorSensor = null;
+    //public ColorSensor colorSensor = null;
 
     /* local OpMode members. */
     HardwareMap         hwMap   = null;
@@ -40,7 +40,7 @@ public class ProjectMecanum
         hwMap = ahwMap;
 
         // Load sensors
-        colorSensor = hwMap.colorSensor.get("colorSensor");
+        //colorSensor = hwMap.colorSensor.get("colorSensor");
 
         // Define and Initialize Motors
         frontRight = hwMap.dcMotor.get("frontRight");
@@ -54,10 +54,10 @@ public class ProjectMecanum
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight .setDirection(DcMotor.Direction.FORWARD);
 
-        frontLeft .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft  .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight .setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft  .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set all motors to zero power
         frontLeft .setPower(0);
