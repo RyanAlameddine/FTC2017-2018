@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  *
  * @version 1.0
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Test")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="ColorTest", group="Test")
 public class ColorTest extends LinearOpMode {
 
     @Override

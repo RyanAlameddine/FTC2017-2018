@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,11 +17,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * Created September 21, 2017 by Ryan Alameddine
  *
- * Last Edited
  *
  * @author Ryan Alameddine
  *
- * @version 1.0
+ * @version 3.0
  */
 
 public class ProjectMecanum
@@ -29,6 +32,7 @@ public class ProjectMecanum
     public DcMotor  backLeft   = null;
 
     //public ColorSensor colorSensor = null;
+    public BNO055IMU imu       = null;
 
     /* local OpMode members. */
     HardwareMap         hwMap   = null;
@@ -47,6 +51,9 @@ public class ProjectMecanum
         frontLeft  = hwMap.dcMotor.get("frontLeft");
         backRight  = hwMap.dcMotor.get("backRight");
         backLeft   = hwMap.dcMotor.get("backLeft");
+
+        //Define and Initialize Sensors
+        loadIMU();
 
         //Setup Motor directions and Encoder settings
         frontLeft .setDirection(DcMotor.Direction.REVERSE);
@@ -87,6 +94,25 @@ public class ProjectMecanum
 
         // Reset the cycle clock for the next pass.
         period.reset();
+    }
+
+    void loadIMU(){
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 }
 
