@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import static android.R.attr.orientation;
+import static android.R.attr.rotationX;
 
 /**
  * Simple Mecanum controller
@@ -19,8 +21,6 @@ import static android.R.attr.orientation;
  * Created September 21, 2017 by Ryan Alameddine
  *
  * @author Ryan Alameddine
- *
- * @version 1.0
  */
 
 @TeleOp(name="MecanumDrive", group="Mecanum")
@@ -43,6 +43,7 @@ public class MecanumDrive extends LinearOpMode{
     private float direction   = 0;
     private VectorF vectorF   = null;
     private boolean isTurning = false;
+    private float rotation    = 0;
 
     //Individual motor powers:
     private float frontLeft   = 0;
@@ -60,27 +61,40 @@ public class MecanumDrive extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-
+            //region A
             //Flip 180 degrees on A press
             if(gamepad1.a && !isTurning){
                 isTurning = true;
-                robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 10);
+                robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 5);
+                Orientation orientation = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                rotation = Float.parseFloat(MathE.formatAngle(orientation.angleUnit, orientation.firstAngle));
+                if(rotation > 0){
+                    rotation = rotation - 180;
+                }else if(rotation < 0){
+                    rotation = rotation + 180;
+                }
             }
 
             if(isTurning){
-
                 Orientation orientation = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                if(Integer.parseInt(MathE.formatAngle(orientation.angleUnit, orientation.firstAngle)) <= 160){
-                    robot.backLeft .setPower(-1);
-                    robot.backRight.setPower(-1);
-                    robot.frontLeft.setPower( 1);
-                    robot.backRight.setPower( 1);
+                float Angle = Float.parseFloat(MathE.formatAngle(orientation.angleUnit, orientation.firstAngle));
+                // -180 0 180
+
+                telemetry.addData("Angle", Angle);
+                telemetry.update();
+                if(Math.abs(rotation - Angle) > 30 && Math.abs(rotation - Angle + 360) > 30){
+                    robot.backLeft  .setPower(-.6); // b f
+                    robot.backRight .setPower(0.6); // b f
+                    robot.frontLeft .setPower(-.6);
+                    robot.frontRight.setPower(0.6);
 
                     continue;
                 }else{
                     robot.imu.stopAccelerationIntegration();
+                    isTurning = false;
                 }
             }
+            //endregion
 
             //region Mecanum Drive math and controls
             //Get the 2 dimensional vector of the direction of left stick and rotation based on right stick
@@ -114,12 +128,15 @@ public class MecanumDrive extends LinearOpMode{
                 backLeft   /= greatestNum;
                 backRight  /= greatestNum;
             }
+            //endregion
 
             robot.frontLeft .setPower(Float.isNaN(frontLeft)  ? 0 : frontLeft  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
             robot.frontRight.setPower(Float.isNaN(frontRight) ? 0 : frontRight * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
             robot.backLeft  .setPower(Float.isNaN(backLeft)   ? 0 : backLeft   * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
             robot.backRight .setPower(Float.isNaN(backRight)  ? 0 : backRight  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
-            //endregion
+
+
+            robot.claw.setPosition(gamepad1.left_trigger);
         }
 
         //Reset robot motors to stop when game is finished

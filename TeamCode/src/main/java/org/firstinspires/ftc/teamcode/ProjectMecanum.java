@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -20,7 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * @author Ryan Alameddine
  *
- * @version 3.0
+ * @version 4.0
  */
 
 public class ProjectMecanum
@@ -31,8 +27,14 @@ public class ProjectMecanum
     public DcMotor  backRight  = null;
     public DcMotor  backLeft   = null;
 
+    public DiServoClawController claw = null;
+
+    /* DiServo Claw servoes */
+    private Servo    clawRight = null;
+    private Servo    clawLeft = null;
+
     //public ColorSensor colorSensor = null;
-    public BNO055IMU imu       = null;
+    public BNO055IMU imu = null;
 
     /* local OpMode members. */
     HardwareMap         hwMap   = null;
@@ -40,17 +42,20 @@ public class ProjectMecanum
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
+        //Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Load sensors
-        //colorSensor = hwMap.colorSensor.get("colorSensor");
-
-        // Define and Initialize Motors
+        //Define and Initialize Motors
         frontRight = hwMap.dcMotor.get("frontRight");
         frontLeft  = hwMap.dcMotor.get("frontLeft");
         backRight  = hwMap.dcMotor.get("backRight");
         backLeft   = hwMap.dcMotor.get("backLeft");
+
+        //Define and Initialize Servos
+        clawRight = hwMap.servo.get("clawRight");
+        clawLeft  = hwMap.servo.get("clawLeft");
+
+        claw      = new DiServoClawController(clawLeft, clawRight);
 
         //Define and Initialize Sensors
         loadIMU();
@@ -66,12 +71,16 @@ public class ProjectMecanum
         backLeft  .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        frontLeft .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft  .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight .setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Set all motors to zero power
         frontLeft .setPower(0);
         frontRight.setPower(0);
         backLeft  .setPower(0);
         backRight .setPower(0);
-
     }
 
 
@@ -80,7 +89,7 @@ public class ProjectMecanum
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
-     *uh huuuuuuuuuuuuuh -not aaron
+     *
      * @param periodMs  Length of wait cycle in mSec.
      * @throws InterruptedException
      */

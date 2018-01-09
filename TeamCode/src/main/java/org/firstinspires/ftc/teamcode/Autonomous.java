@@ -19,11 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  * Created September 26, 2017 by Ryan Alameddine
  *
- * Last Edited October 5, 2017
  *
  * @author Ryan Alameddine
- *
- * @version 1.0
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Test")
 public class Autonomous extends LinearOpMode {

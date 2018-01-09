@@ -13,11 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  * Created September 26, 2017 by Ryan Alameddine
  *
- * Last Edited October 5, 2017
- *
  * @author Ryan Alameddine
- *
- * @version 1.0
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="BasicAuto", group="Test")
 public class BasicAuto extends LinearOpMode {
@@ -30,12 +26,32 @@ public class BasicAuto extends LinearOpMode {
 
         waitForStart();
 
+        robot.claw.setPosition(1);
+
+        sleep(500);
+
         robot.frontRight.setPower(-.2);
         robot.frontLeft .setPower(-.2);
         robot.backRight .setPower(-.2);
         robot.backLeft  .setPower(-.2);
 
-        sleep(1500);
+        sleep(1750);
+
+        robot.claw.setPosition(0);
+
+        robot.frontRight.setPower(-.3);
+        robot.frontLeft .setPower(-.3);
+        robot.backRight .setPower(-.3);
+        robot.backLeft  .setPower(-.3);
+
+        sleep(1000);
+
+        robot.frontRight.setPower( .3);
+        robot.frontLeft .setPower( .3);
+        robot.backRight .setPower( .3);
+        robot.backLeft  .setPower( .3);
+
+        sleep(500);
 
         robot.frontRight.setPower(0);
         robot.frontLeft .setPower(0);

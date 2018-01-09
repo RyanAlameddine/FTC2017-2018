@@ -41,7 +41,7 @@ public class MathE {
     }
 
     /***
-     * Format degrees from IMU to usable string
+     * Format degrees from IMU to usable string1
      *
      * @param degrees
      */
