@@ -103,7 +103,7 @@ public class MecanumDrive extends LinearOpMode{
             speed      = vectorF.magnitude();
             vectorF    = new VectorF(vectorF.get(0) / speed, vectorF.get(1) / speed);
             angle      = (float) Math.atan2(vectorF.get(0), vectorF.get(1));
-            direction  = gamepad1.right_stick_x/*    * -1    */;
+            direction  = gamepad1.right_stick_x * -1;
 
             //Apply mathematical operations to find speeds of each motor
             frontLeft  = (float) (speed * Math.sin(angle + Math.PI / 4) + direction) * speedMultiplier;
@@ -131,10 +131,10 @@ public class MecanumDrive extends LinearOpMode{
             }
             //endregion
 
-            robot.frontLeft .setPower(Float.isNaN(frontLeft)  ? 0 : frontLeft  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
-            robot.frontRight.setPower(Float.isNaN(frontRight) ? 0 : frontRight * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
-            robot.backLeft  .setPower(Float.isNaN(backLeft)   ? 0 : backLeft   * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
-            robot.backRight .setPower(Float.isNaN(backRight)  ? 0 : backRight  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.frontLeft .setPower(Float.isNaN(frontLeft)  ? 0 : frontLeft  * (gamepad1.left_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.frontRight.setPower(Float.isNaN(frontRight) ? 0 : frontRight * (gamepad1.left_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.backLeft  .setPower(Float.isNaN(backLeft)   ? 0 : backLeft   * (gamepad1.left_trigger > .2 ? 1 : slowModeMultiplier));
+            robot.backRight .setPower(Float.isNaN(backRight)  ? 0 : backRight  * (gamepad1.left_trigger > .2 ? 1 : slowModeMultiplier));
 
 
             robot.claw.setPosition((gamepad1.right_trigger + .4) / 1.3);
