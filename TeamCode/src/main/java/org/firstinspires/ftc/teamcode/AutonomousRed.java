@@ -1,18 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Simple Mecanum controller
@@ -22,14 +12,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  * @author Ryan Alameddine
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Test")
-public class Autonomous extends LinearOpMode {
-    VuforiaLocalizer localizer;
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutonomousRed", group="Test")
+public class AutonomousRed extends LinearOpMode {
+    //VuforiaLocalizer localizer;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ProjectMecanum robot = new ProjectMecanum();
+        Project0 robot = new Project0();
 
+        //region Vuforia
+        /*
         //Vuforia Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -56,9 +48,35 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("VuMark", vuMark + " Visible");
         telemetry.update();
+        */
+        //endregion Vuforia
 
-        while(opModeIsActive()){
+        robot.init(hardwareMap);
 
+        waitForStart();
+
+        robot.colorSensor.enableLed(true);
+        robot.JewelArmServo.setPosition(1);
+        sleep(2000);
+
+        if(robot.colorSensor.red() > robot.colorSensor.blue()){
+            robot.backLeft  .setPower(.2f);
+            robot.backRight .setPower(.2f);
+            robot.frontLeft .setPower(.2f);
+            robot.frontRight.setPower(.2f);
+        }else{
+            robot.backLeft  .setPower(-.2f);
+            robot.backRight .setPower(-.2f);
+            robot.frontLeft .setPower(-.2f);
+            robot.frontRight.setPower(-.2f);
         }
+        sleep(200);
+        robot.backLeft  .setPower(0);
+        robot.backRight .setPower(0);
+        robot.frontLeft .setPower(0);
+        robot.frontRight.setPower(0);
+
+        robot.JewelArmServo.setPosition(.5f);
+
     }
 }

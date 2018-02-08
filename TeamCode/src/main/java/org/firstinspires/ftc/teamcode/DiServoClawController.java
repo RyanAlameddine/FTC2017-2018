@@ -21,7 +21,7 @@ public class DiServoClawController {
     }
 
     public void setPosition(double position){
-        Left .setPosition(  position);
+        Left .setPosition(position-.15);
         Right.setPosition(1-position);
     }
 }

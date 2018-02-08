@@ -19,15 +19,15 @@ public class ColorTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ProjectMecanum robot = new ProjectMecanum();
+        Project0 robot = new Project0();
 
         robot.init(hardwareMap);
 
         waitForStart();
 
         while(opModeIsActive()){
-            //robot.colorSensor.enableLed(true);
-            //telemetry.addData("ARGB", robot.colorSensor.argb());
+            robot.colorSensor.enableLed(true);
+            telemetry.addData("ARGB", robot.colorSensor.argb());
         }
     }
 }

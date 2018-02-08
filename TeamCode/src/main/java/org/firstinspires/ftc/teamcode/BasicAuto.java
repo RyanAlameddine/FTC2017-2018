@@ -23,7 +23,7 @@ public class BasicAuto extends LinearOpMode {
         ProjectMecanum robot = new ProjectMecanum();
 
         robot.init(hardwareMap);
-
+        
         waitForStart();
 
         robot.claw.setPosition(1);

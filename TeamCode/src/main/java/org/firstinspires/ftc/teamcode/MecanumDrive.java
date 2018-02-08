@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import static android.R.attr.orientation;
 import static android.R.attr.rotationX;
+import static android.R.attr.textAppearanceMedium;
 
 /**
  * Simple Mecanum controller
@@ -25,7 +26,7 @@ import static android.R.attr.rotationX;
 
 @TeleOp(name="MecanumDrive", group="Mecanum")
 public class MecanumDrive extends LinearOpMode{
-    private ProjectMecanum robot = new ProjectMecanum();
+    private Project0 robot = new Project0();
 
     /* Setting variables */
 
@@ -102,7 +103,7 @@ public class MecanumDrive extends LinearOpMode{
             speed      = vectorF.magnitude();
             vectorF    = new VectorF(vectorF.get(0) / speed, vectorF.get(1) / speed);
             angle      = (float) Math.atan2(vectorF.get(0), vectorF.get(1));
-            direction  = gamepad1.right_stick_x * -1;
+            direction  = gamepad1.right_stick_x/*    * -1    */;
 
             //Apply mathematical operations to find speeds of each motor
             frontLeft  = (float) (speed * Math.sin(angle + Math.PI / 4) + direction) * speedMultiplier;
@@ -136,7 +137,15 @@ public class MecanumDrive extends LinearOpMode{
             robot.backRight .setPower(Float.isNaN(backRight)  ? 0 : backRight  * (gamepad1.right_trigger > .2 ? 1 : slowModeMultiplier));
 
 
-            robot.claw.setPosition(gamepad1.left_trigger);
+            robot.claw.setPosition((gamepad1.right_trigger + .4) / 1.3);
+
+            if(gamepad1.dpad_up){
+                robot.arm.setPower(.1f);
+            }else if(gamepad1.dpad_down){
+                robot.arm.setPower(-.1f);
+            }else{
+                robot.arm.setPower(0);
+            }
         }
 
         //Reset robot motors to stop when game is finished
@@ -144,5 +153,6 @@ public class MecanumDrive extends LinearOpMode{
         robot.frontRight.setPower(0);
         robot.backLeft  .setPower(0);
         robot.backRight .setPower(0);
+        robot.arm       .setPower(0);
     }
 }
